@@ -6,17 +6,8 @@ import Split from "react-split"
 import {nanoid} from "nanoid"
 import './App.css'
 
-/**
- * Challenge: Spend 10-20+ minutes reading through the code
- * and trying to understand how it's currently working. Spend
- * as much time as you need to feel confident that you
- * understand the existing code (although you don't need
- * to fully understand everything to move on)
- */
-
 export default function App() {
-  const localNotes = JSON.parse(localStorage.getItem('notes'))
-  const [notes, setNotes] = React.useState(localNotes || [])
+  const [notes, setNotes] = React.useState(() => JSON.parse(localStorage.getItem('notes')) || [])
   const [currentNoteId, setCurrentNoteId] = React.useState(
       (notes[0] && notes[0].id) || ""
   )
@@ -36,11 +27,22 @@ export default function App() {
 
 
   function updateNote(text) {
-    setNotes(oldNotes => oldNotes.map(oldNote => {
-      return oldNote.id === currentNoteId
-          ? { ...oldNote, body: text }
-          : oldNote
-    }))
+    // setNotes(oldNotes => oldNotes.map(oldNote => {
+    //   return oldNote.id === currentNoteId
+    //       ? { ...oldNote, body: text }
+    //       : oldNote
+    // }))
+    setNotes(oldNotes => {
+      let newNotes = []
+      oldNotes.forEach(function (oldNote) {
+        if (oldNote.id === currentNoteId) {
+          newNotes.unshift({...oldNote, body: text})
+        } else {
+          newNotes.push(oldNote)
+        }
+      })
+      return newNotes;
+    })
   }
 
   function findCurrentNote() {
