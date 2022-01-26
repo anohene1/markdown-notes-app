@@ -1,7 +1,6 @@
 import React from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
-import {data} from "./data";
 import Split from "react-split"
 import {nanoid} from "nanoid"
 import './App.css'
@@ -27,11 +26,6 @@ export default function App() {
 
 
   function updateNote(text) {
-    // setNotes(oldNotes => oldNotes.map(oldNote => {
-    //   return oldNote.id === currentNoteId
-    //       ? { ...oldNote, body: text }
-    //       : oldNote
-    // }))
     setNotes(oldNotes => {
       let newNotes = []
       oldNotes.forEach(function (oldNote) {
@@ -42,6 +36,13 @@ export default function App() {
         }
       })
       return newNotes;
+    })
+  }
+
+  function deleteNote(event, noteId) {
+    event.stopPropagation()
+    setNotes(oldNotes => {
+      return oldNotes.filter(note => note.id !== noteId)
     })
   }
 
@@ -66,6 +67,7 @@ export default function App() {
                     currentNote={findCurrentNote()}
                     setCurrentNoteId={setCurrentNoteId}
                     newNote={createNewNote}
+                    deleteNote={deleteNote}
                 />
                 {
                   currentNoteId &&
